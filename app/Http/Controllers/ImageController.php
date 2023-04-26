@@ -45,7 +45,7 @@ class ImageController extends Controller
 
             $imageName = time().'.'.$request->image->extension();
             $request->image->move(public_path('image'), $imageName);
-            $pathImg="/image/$imageName/";
+            $pathImg="/image/$imageName";
             $idp=$request->project_id;
 
             Image::create([
