@@ -7,8 +7,8 @@
 </head>
 <body>
 
-    <h1>{{ $image }}</h1>
-    <h2>{{ $tstjo }}</h2>
+    <h1>CECI EST UN  2 eme TEST</h1>
+
 
 </body>
 </html>

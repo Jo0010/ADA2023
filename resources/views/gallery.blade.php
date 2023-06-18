@@ -33,6 +33,7 @@
                                 @role('Super-Admin')
                                 <figcaption>{{$image->name}}</figcaption>
                                 </figure>
+
                                 @endrole
                             </div>
                             @php($cpt++)
@@ -90,24 +91,38 @@
 
         </div>
     </div>
-        <div class="row"style="background: rgba(204, 204, 204, 0.5); border-bottom:solid gray 2px; padding:0% 5% 5% 5%;">
-            <div class="col-sm-2">
-            </div>
-            <div class="col-sm-8" ">
-                <!--Delete image-->
-                <form action="{{ route('images.destroy',$image->id)  }}" method="POST">
-                    <label for="id">Choose a image:</label>
-                    <select id="id" name="id">
-                        @foreach ($images->where('project_id', $project->id) as $image)
-                        <option value="{{ $image->id }}">{{ $image->name }}</option>
-                        @endforeach
-                    </select>
+    <div class="row">
+        <div class="col-sm-2">
+        </div>
+        <div class="col-sm-8" style="background: rgba(204, 204, 204, 0.5);padding:5%;width:100%;">
+        <!-- Gestion Image -->
+        <table class="table table-bordered">
+            <tr>
+                <th>Name:</th>
+                <th>Project:</th>
+                <th width="280px">Action</th>
+            </tr>
+            @foreach ($images as $image)
+            @if ($image->project_id==$project->id)
+
+            <tr>
+                <td>{{ $image->name }}</td>
+                <td>{{ $image->project_id }}</td>
+                <td>
+                    <form action="{{ route('images.destroy',$image->id) }}" method="POST">
+
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Supprimer l'image</button>
-                </form>
-            </div>
-        <div class="col-sm-2" >
+
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            @endif
+            @endforeach
+        </table>
+        </div>
+        <div class="col-sm-2">
         </div>
     </div>
 	    @endrole
@@ -121,24 +136,54 @@
     </div>
 </div>
 @role('Super-Admin')
+<div class="row" style="background: rgba(204, 204, 204, 0.5);padding:10px;">
+
+
+    <div class="col-sm-1">
+    </div>
+    <div class="col-sm-10">
+    <!--Edit project-->
+<form action="{{ route('projects.update', $project->id) }}" id="project-{{ $project->id }}" name="project" method="POST" enctype="multipart/form-data">        @csrf
+        @method('PUT')
+        <div class="form-group">
+            <input type="hidden" id="version" name="id" value="{{ $project->id }}" />
+          <strong>Description :</strong>
+          <textarea id="description-{{ $project->id }}" name="description" form="project-{{ $project->id }}" class="form-control" rows="5" placeholder="project">{{ $project->description }}</textarea>
+          @error('description')
+            <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
+          @enderror
+        </div>
+        <button type="submit" class="btn btn-secondary" style="float: right;">Valider</button>
+      </form>
+
+    </div>
+
+    <div class="col-sm-1">
+
+    </div>
+</div>
+
+
 <div class="row" style="background: rgba(204, 204, 204, 0.5); border-bottom:solid gray 2px; padding:10px;">
     <div class="col-sm-4">
+
     </div>
-    <div class="col-sm-2">
-    <!--Edit project-->
-    <a class="btn btn-secondary" href="{{ route('projects.edit',$project->id) }}">Modifier</a>
-    </div>
-    <div class="col-sm-2" >
-    <!--Delete project-->
+    <div class="col-sm-4">
+        <!--Delete project-->
     <form action="{{ route('projects.destroy',$project->id)  }}" method="POST">
         @csrf
         @method('DELETE')
         <button type="submit" class="btn btn-danger">Supprimer le project</button>
     </form>
+
+    </div>
+    <div class="col-sm-4">
+
     </div>
     <div class="col-sm-4">
     </div>
 </div>
+
     @endrole
     @endforeach
     @role('Super-Admin')
@@ -159,6 +204,8 @@
     <div class="col-sm-2">
     </div>
 </div>
+
+
     @endrole
 
 @endsection

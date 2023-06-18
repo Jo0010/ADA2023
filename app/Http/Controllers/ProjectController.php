@@ -82,16 +82,20 @@ class ProjectController extends Controller
      * @param  \App\Models\Project  $Project
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Project $Project)
+    public function update(Request $request, Project $project)
     {
         $request->validate([
+            'id' => 'required',
             'description' => 'required',
         ]);
 
-        $Project->update($request->all());
-
+        $project->update($request->all());
+      /*   dd($request->input('id'));
+        dd($request->input('description')); */
         return redirect()->route('projects.index')
                         ->with('success','description updated successfully');
+
+
     }
     /**
      * Remove the specified resource from storage.
@@ -102,10 +106,10 @@ class ProjectController extends Controller
     public function destroy(Project $Project)
     {
         $Project->delete();
-/*
-        $images = Image::all();
-        $projects = Project::all();
-        return view('gallery',compact('images','projects'));*/
+
+        $images = Image::where('project_id','id');
+        $images->delete();
+
         return redirect()->route('projects.index');
     }
 }

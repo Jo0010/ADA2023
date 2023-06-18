@@ -111,6 +111,7 @@ class ImageController extends Controller
         $Image->delete();
 
 
+
         return redirect()->route('projects.index');
     }
 }

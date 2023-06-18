@@ -21,7 +21,11 @@ Route::resource('users', App\Http\Controllers\UserController::class);
 Route::resource('controller', App\Http\Controllers\Controller::class);
 
 Route::get('/press', [App\Http\Controllers\CommentController::class, 'index']);
-Route::get('/gallery',[App\Http\Controllers\ProjectController::class,'show'] );
+Route::get('/gallery',[App\Http\Controllers\ProjectController::class,'show']);
+Route::get('/gestion',[App\Http\Controllers\UserController::class,'index'])->middleware('auth');
+Route::get('/profil',[App\Http\Controllers\UserController::class,'profil'])->middleware('auth');
+
+
 
 Route::controller(App\Http\Controllers\ImageController::class)->group(function(){
     Route::get('/image-upload', 'index')->name('image.form');
@@ -38,14 +42,10 @@ Route::get('/legal', function () {
 
 
 
+
 Route::get('/contact', function () {
     return view('contact');
 });
 
-
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
 
 require __DIR__.'/auth.php';

@@ -4,10 +4,9 @@
   <div class="row">
     <!-- article -->
     <div class="col-sm-2">
-      </div>
-      <div class="col-sm-8" style="background: rgba(204, 204, 204,
-      0.5);padding:5%">
-        <h3>L'ex-téléboutique de la chaussée de Jette se mue en logements, vides de parachèvement</h3>
+    </div>
+    <div class="col-sm-8" style="background: rgba(204, 204, 204, 0.5); padding:5%">
+      <h3>L'ex-téléboutique de la chaussée de Jette se mue en logements, vides de parachèvement</h3>
       <br>
       <p>JETTE Non, vous n'avez pas la berlue ! Le 550 chaussée de Jette abritait bien une téléboutique Belgacom il y a quatre, cinq ans. Le chantier actuel dissimule à peine un bon 4.000 m2 de lofts. Du logement moyen de belle qualité, à la vérité, auquel s'ajouteront encore des appartements.</p>
       <br>
@@ -18,101 +17,96 @@
       <p>ADA est un bureau d’architecture, fondé en 1990 par un architecte à son
         retour d’Afrique du Sud ou il avait exercé le métier d’architecte au sein du
         groupe SAUTCH VORSTER AND PARTNERS depuis 1986.</p>
-        <p>
-          ADA a démarré ses activités comme partenaire et membre du groupe
-          SAUTCH VORSTER AND PARTNERS INTERNATIONAL.
-        </p>
-        <p>En 1993 ADA a rompu son partenariat avec le groupe Sud-Africain et à
-          recentrer ses activités sur la Belgique.</p>
-        <p>De 1993 à 2000 les principaux projets d’ADA furent des projets de type
-          industriel.</p>
-        <p>A partir de 2001, le bureau d’architecture s’orienta vers des projets de types
-          résidentiels.</p>
-        <p>
+      <p>
+        ADA a démarré ses activités comme partenaire et membre du groupe
+        SAUTCH VORSTER AND PARTNERS INTERNATIONAL.
+      </p>
+      <p>En 1993 ADA a rompu son partenariat avec le groupe Sud-Africain et à
+        recentrer ses activités sur la Belgique.</p>
+      <p>De 1993 à 2000 les principaux projets d’ADA furent des projets de type
+        industriel.</p>
+      <p>A partir de 2001, le bureau d’architecture s’orienta vers des projets de types
+        résidentiels.</p>
+      <p>
         ADA comprend trois branches l’architecture, la gestion de chantier ainsi
         qu’une branche chargée de la responsabilité administrative ainsi que la
         comptabilité.
-        </p>
-        <br>
-        <br>
-        <h3>Avis de la clientèle</h3>
+      </p>
+      <br>
+      <br>
+      <h3>Avis de la clientèle</h3>
 
-        @foreach ($comments as $comment)
+      @foreach ($comments as $comment)
         <tr>
-            <td>"{{ $comment->com }}"</td>
-            <br>
-            <form action="{{ route('comments.destroy',$comment->id)  }}" method="POST">
-                @csrf
-                @method('DELETE')
-            @hasrole('user')
-
-                @if(Auth::user()->id==$comment->user_id)
-                <a class="btn btn-secondary" href="{{ route('comments.edit',$comment->id) }}">Modifier</a>
-                <button type="submit" class="btn btn-danger">Supprimer</button>
-                @endif
-
-            @endhasrole
-
-            @hasrole('Super-Admin')
-            <a class="btn btn-secondary" href="{{ route('comments.edit',$comment->id) }}">Modifier</a>
-            <button type="submit" class="btn btn-danger">Supprimer</button>
-            @endhasrole
-
-            </form>
-        </tr>
-        @endforeach
-        @role('user')
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <strong>Whoops!</strong> Problème avec le commentaire.<br><br>
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-                <form action="{{ route('comments.store') }}" method="POST">
-                    @csrf
-                        <div class="mb-3 mt-3">
-                            <label for="comment">Comments:</label>
-                            <textarea class="form-control" rows="5" id="comment" name="com"></textarea>
-                        </div>
-                        <input type="hidden" id="version" name="user_id" value="{{ Auth::user()->id }}" />
-                        <button type="submit" class="btn btn-secondary">Valider</button>
-                </form>
-
-            @endrole
-    @role('Super-Admin')
-        <div class="row">
-          @if ($errors->any())
-              <div class="alert alert-danger">
-                  <strong>Whoops!</strong> Problème avec le commentaire.<br><br>
-                  <ul>
-                      @foreach ($errors->all() as $error)
-                          <li>{{ $error }}</li>
-                      @endforeach
-                  </ul>
-              </div>
-          @endif
-          <form action="{{ route('comments.store') }}" method="POST">
+          <td>"{{ $comment->com }}"</td>
+          <br>
+          @hasrole('user')
+          @if(Auth::user()->id == $comment->user_id)
+            <form action="{{ route('comments.destroy', $comment->id) }}" method="POST">
             @csrf
-                <div class="mb-3 mt-3">
-                    <label for="comment">Commentaire:</label>
-                    <textarea class="form-control" rows="5" id="comment" name="com"></textarea>
+            @method('DELETE')
+            <button type="submit" class="btn btn-danger">Supprimer</button>
+            </form>
+
+          @endif
+          @endhasrole
+            @hasrole('user')
+            @if(Auth::user()->id == $comment->user_id)
+              <form action="{{ route('comments.update', $comment->id) }}" id="comment-{{ $comment->id }}" name="comment" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
+                <div class="form-group">
+                  <input type="hidden" id="version" name="user_id" value="{{ $comment->user_id }}" />
+                  <strong>Commentaire :</strong>
+                  <textarea id="com-{{ $comment->id }}" name="com" form="comment-{{ $comment->id }}" class="form-control" rows="5" placeholder="comment">{{ $comment->com }}</textarea>
+                  @error('com')
+                    <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
+                  @enderror
                 </div>
-                <input type="hidden" id="version" name="user_id" value="{{ Auth::user()->id }}" />
-                <button type="submit" class="btn btn-secondary">Valider</button>
-          </form>
-        </div>
-    @endrole
+                <button type="submit" class="btn btn-secondary" style="float: right;">Valider</button>
+              </form>
+
+            @endif
+          @endhasrole
+
+          @hasrole('Super-Admin')
+          <form action="{{ route('comments.destroy', $comment->id) }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-danger">Supprimer</button>
+            </form>
+          @endhasrole
+          <p style=" border-bottom:solid gray 2px; padding:10px;"></p>
+        </tr>
+      @endforeach
+
+      @role('user')
+        @if ($errors->any())
+          <div class="alert alert-danger">
+            <strong>Whoops!</strong> Problème avec le commentaire.<br><br>
+            <ul>
+              @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+              @endforeach
+            </ul>
+          </div>
+        @endif
+
+        <form action="{{ route('comments.store') }}" method="POST">
+          @csrf
+          <div class="mb-3 mt-3">
+            <label for="comment">Comments:</label>
+            <textarea class="form-control" rows="5" id="comment" name="com"></textarea>
+          </div>
+          <input type="hidden" id="version" name="user_id" value="{{ Auth::user()->id }}" />
+          <button type="submit" class="btn btn-secondary">Valider</button>
+        </form>
+      @endrole
+
     </div>
 
     <div class="col-sm-2">
-      </div>
-
+    </div>
   </div>
-
 </div>
 @endsection
-
